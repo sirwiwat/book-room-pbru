@@ -111,7 +111,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/editText3"
                     android:layout_weight="1"
-                    android:textColor="@color/text" />
+                    android:textColor="@color/text"
+                    android:inputType="number" />
             </LinearLayout>
 
             <RadioGroup
