@@ -27,8 +27,20 @@ public class SingUpActivity2 extends AppCompatActivity {
         //ผูกตัวแปร
         bindwiget();
 
+        //ควบคุมเรดิโอButton
+        radiocontroller();
+
 
     }//methon ลูก สมัครสมาชิก
+
+    private void radiocontroller() {
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+            }
+        });
+    }
 
     private void bindwiget() {
         nameEditText = (EditText) findViewById(R.id.editText);
@@ -57,9 +69,25 @@ public class SingUpActivity2 extends AppCompatActivity {
             MyError myError = new MyError();
             myError.myDialog(this, "รหัสบัตรประชาชนไม่ถูกต้อง", "กรุณากรอกบัตรประชาชนให้ถูกต้อง");
         }//ตรวจสอบเลขบัตรประชาชน
+        else if (checkradiochoose()) {
+            MyError myError = new MyError();
+            myError.myDialog(this,"ไม่มีการเลือกสถานะ","กรุณาเลือกสถานะ");
 
+        } else {
+            //uploadtoserver
+
+        } //เช็ค radiobutton
 
     }//คลิกสมัครสมาชิก
+
+    private boolean checkradiochoose() {
+
+        boolean result = true;
+
+        result = officeRadioButton.isChecked() || outofficeRadioButton.isChecked();
+
+        return !result;
+    }
 
     private boolean checkSpace() {
         boolean result = true;
