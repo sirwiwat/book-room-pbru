@@ -20,7 +20,7 @@ public class MyOpenHelper extends SQLiteOpenHelper{
             "IDcard text," +
             "Office text," +
             "User text," +
-            "password text);";
+            "Password text);";
 
 
     public MyOpenHelper(Context context) {

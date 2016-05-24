@@ -21,7 +21,7 @@ public class Mymanage {
     public static final String column_IDcard = "IDcard";
     public static final String column_Office = "Office";
     public static final String column_User = "User";
-    public static final String column_password = "password";
+    public static final String column_password = "Password";
 
 
     public Mymanage(Context context) {
