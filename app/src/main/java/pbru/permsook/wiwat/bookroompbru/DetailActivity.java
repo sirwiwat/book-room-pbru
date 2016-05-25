@@ -6,12 +6,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 public class DetailActivity extends AppCompatActivity {
 
     private TextView nameRoomTextView, nameBuildTextView, sizeTextView, priceDayTextView, priceHoliTextView;
     private ImageView imageView;
     private  String nameRoomString,nameBuildString,sizeString,priceDayString, priceHoliString,
     image1String,image2String,image3String,image4String,image5String;
+    private int myImage = 1;
 
 
     @Override
@@ -24,8 +27,64 @@ public class DetailActivity extends AppCompatActivity {
 
         showtextviwe();
 
+        showimage(1);
+
 
     }//ลูก
+
+    public void clickBack(View view) {
+        finish();
+    }
+
+    public void clickOrder(View view) {
+
+    }
+
+    public void clickIncrease(View view) {
+
+
+        if (myImage == 5) {
+            myImage = 1;
+
+        } else {
+            myImage += 1;
+        }
+
+        showimage(myImage);
+    }//เลื่อนภาพไปทางขวา
+
+    public void clickDecrease(View view) {
+
+        if (myImage == 1) {
+            myImage = 5;
+        } else {
+            myImage -= 1;
+        }
+    }//เลื่อภาพไปทางซ้าย
+
+    private void showimage(int intimage) {
+        String urlImage = image1String;
+
+        switch (intimage) {
+
+            case 1 :
+                urlImage = image1String;
+                break;
+            case 2 :
+                urlImage = image2String;
+                break;
+            case 3 :
+                urlImage = image3String;
+                break;
+            case 4 :
+                urlImage = image4String;
+                break;
+            case 5 :
+                urlImage = image5String;
+                break;
+        }
+        Picasso.with(this).load(urlImage).resize(250, 200).into(imageView);
+    }
 
     private void showtextviwe() {
         nameRoomTextView.setText(nameRoomString);
