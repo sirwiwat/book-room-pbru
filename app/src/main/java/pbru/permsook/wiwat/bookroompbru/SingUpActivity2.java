@@ -102,7 +102,7 @@ public class SingUpActivity2 extends AppCompatActivity {
             MyError myError = new MyError();
             myError.myDialog(this, "มี Uer นี้อยู่แล้ว", "กรุณากรอก User ใหม่");
 
-        } //เช็ค radiobutton
+        }
         else if (checkIDcard()) {
             MyError myError = new MyError();
             myError.myDialog(this, "รหัสบัตรประชาชนถูกใช้แล้ว", "กรุณากรอกบัตรประชาชนให้ถูกต้อง");
@@ -128,7 +128,8 @@ public class SingUpActivity2 extends AppCompatActivity {
             return false;
         }
 
-    }
+    }//เช็คบัตรประชาชนซ้ำ
+
 
 
     private boolean checkUser() {
@@ -147,7 +148,7 @@ public class SingUpActivity2 extends AppCompatActivity {
         }
 
 
-    }//
+    }//เช็ค User ซ้ำ
 
     private void uploadtoserver() {
 

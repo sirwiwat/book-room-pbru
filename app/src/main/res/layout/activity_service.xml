@@ -7,6 +7,26 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="pbru.permsook.wiwat.bookroompbru.ServiceActivity">
+    tools:context="pbru.permsook.wiwat.bookroompbru.ServiceActivity"
+    android:background="@drawable/bg10"
+    android:id="@+id/iwa">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/textView"
+        android:textSize="@dimen/h2"
+        android:textColor="@color/text"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/listView"
+        android:layout_alignEnd="@+id/listView" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:layout_below="@+id/textView"
+        android:background="#50ffffff" />
 
 </RelativeLayout>
