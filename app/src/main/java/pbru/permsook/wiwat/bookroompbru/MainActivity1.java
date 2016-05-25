@@ -1,6 +1,7 @@
 package pbru.permsook.wiwat.bookroompbru;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.speech.tts.Voice;
@@ -26,6 +27,8 @@ public class MainActivity1 extends AppCompatActivity {
     private String strLogo = "http://swiftcodingthai.com/pbru/Image/logo_pbru.png";
     private ImageView imageView;
     private EditText userEdittext, passwordEdittext;
+    private String userSting, passwordString;
+    private String[] userLoginString;
 
 
 
@@ -53,6 +56,65 @@ public class MainActivity1 extends AppCompatActivity {
         synJSON();
 
     } //ลูก
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        deleteAllSQLite();
+        synJSON();
+    }
+
+    public void clickSignin(View view) {
+        userSting = userEdittext.getText().toString().trim();
+        passwordString = passwordEdittext.getText().toString().trim();
+
+        if (userSting.equals("") || passwordString.equals("")) {
+            MyError myError = new MyError();
+            myError.myDialog(this, "กรอกข้อมูลไม่ครบ", "กรุณากรอกข้อมูลให้ครบ");
+
+        }//เช็คว่ามีความว่างเปล่า
+        else {
+            searchUser(userSting);
+        }
+
+    }//เช็คปุ่มล็อกอิน
+
+
+    private void searchUser(String userSting) {
+        try {
+            SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(MyOpenHelper.database_name,
+                    MODE_PRIVATE, null);
+            Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM userTABLE WHERE User = "+"'"+userSting+"'", null);
+            cursor.moveToFirst();
+            userLoginString = new String[cursor.getColumnCount()];
+
+            for (int i=0;i<cursor.getColumnCount();i++) {
+                userLoginString[i] = cursor.getString(i);
+            }
+            cursor.close();
+
+            if (passwordString.equals(userLoginString[6])) {
+                Intent intent = new Intent(MainActivity1.this, ServiceActivity.class);
+                intent.putExtra("User",userLoginString);
+                startActivity(intent);
+                finish();
+
+            } else {
+                MyError myError = new MyError();
+                myError.myDialog(this, "Password ไม่ถูกต้อง", "กรุณากรอก Password ใหม่");
+
+
+            } //เช็ค password
+
+        } catch (Exception e) {
+
+            MyError myError = new MyError();
+            myError.myDialog(this, "ไม่มี User ที่ต้องการ", "กรุณากรอก User ใหม่");
+
+        }
+
+    }//โค้ด ค้นหายูเซอร์
+
 
     private void synJSON() {
         SynUser synUser = new SynUser();

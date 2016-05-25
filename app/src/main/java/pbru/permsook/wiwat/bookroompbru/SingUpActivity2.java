@@ -1,7 +1,10 @@
 package pbru.permsook.wiwat.bookroompbru;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -95,12 +98,56 @@ public class SingUpActivity2 extends AppCompatActivity {
             MyError myError = new MyError();
             myError.myDialog(this, "ไม่มีการเลือกสถานะ", "กรุณาเลือกสถานะ");
 
-        } else {
-            uploadtoserver();
+        } else if (checkUser()) {
+            MyError myError = new MyError();
+            myError.myDialog(this, "มี Uer นี้อยู่แล้ว", "กรุณากรอก User ใหม่");
 
         } //เช็ค radiobutton
+        else if (checkIDcard()) {
+            MyError myError = new MyError();
+            myError.myDialog(this, "รหัสบัตรประชาชนถูกใช้แล้ว", "กรุณากรอกบัตรประชาชนให้ถูกต้อง");
+        } else {
+            uploadtoserver();
+        }
 
     }//คลิกสมัครสมาชิก
+
+    private boolean checkIDcard() {
+        try {
+
+            SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(MyOpenHelper.database_name,
+                    MODE_PRIVATE, null);
+            Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM userTABLE WHERE IDcard = "+"'"+ idcaedString +"'", null);
+            cursor.moveToFirst();
+
+            Log.d("25May", "ID ==>" + idcaedString);
+            Log.d("25May", "ID ==>" + cursor.getString(3));
+            return true;
+
+        } catch (Exception e) {
+            return false;
+        }
+
+    }
+
+
+    private boolean checkUser() {
+        try {
+
+            SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(MyOpenHelper.database_name,
+                    MODE_PRIVATE, null);
+            Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM userTABLE WHERE User = "+"'"+ userString +"'", null);
+            cursor.moveToFirst();
+            Log.d("25May", "ID ==>" + userString);
+            Log.d("25May", "ID ==>" + cursor.getString(5));
+            return true;
+
+        } catch (Exception e) {
+            return false;
+        }
+
+
+    }//
 
     private void uploadtoserver() {
 
