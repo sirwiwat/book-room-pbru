@@ -2,6 +2,8 @@ package pbru.permsook.wiwat.bookroompbru;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.preference.DialogPreference;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +25,9 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.Calendar;
 
@@ -32,12 +37,10 @@ public class CalendaActivity extends AppCompatActivity {
     private Spinner spinner;
     private RadioGroup radioGroup;
     private RadioButton beforenoonRadioButton, afternoonRadioButton, fulldayRadioButton;
-    private String idcardString,nameRoomString,dateString, timeString;
+    private String idcardString, nameRoomString, dateString, timeString;
     private String[] userloginStrings;
-    private int DayAnInt,monthAnInt, yearAnInt,loopdayAnInt=1;
+    private int DayAnInt, monthAnInt, yearAnInt, loopdayAnInt = 1;
     private String urlJSON = "http://swiftcodingthai.com/pbru/get_order.php";
-
-
 
 
     @Override
@@ -86,28 +89,52 @@ public class CalendaActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d("26May", "JSON ==>" + s);
+
+            try {
+
+                JSONArray jsonArray = new JSONArray(s);
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    String strIDcard = jsonObject.getString(Mymanage.column_IDcard);
+                    String strNameRoom = jsonObject.getString(Mymanage.column_nameRoom);
+                    String strDate = jsonObject.getString(Mymanage.column_date);
+                    String strTime = jsonObject.getString(Mymanage.column_time);
+
+                    Mymanage mymanage = new Mymanage(CalendaActivity.this);
+                    mymanage.addorder(strIDcard, strNameRoom, strDate, strTime);
+
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
         }//onPost
     }//syn class
 
     private void calendacontoller() {
 
 
-            calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-                @Override
-                public void onSelectedDayChange(CalendarView calendarView, int year, int month, int day) {
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(CalendarView calendarView, int year, int month, int day) {
 
-                    SetupDate();
+                SetupDate();
 
 
+                if (year < yearAnInt) {
+                    MyError myError = new MyError();
+                    myError.myDialog(CalendaActivity.this, "คุณเลือกย้อนเวลาไม่ได้", "โปรดเลือกให้ถูกต้อง");
 
-                    if (year < yearAnInt) {
-                        MyError myError = new MyError();
-                        myError.myDialog(CalendaActivity. this, "คุณเลือกย้อนเวลาไม่ได้", "โปรดเลือกให้ถูกต้อง");
+                } else {
+                    if (year == yearAnInt) {
 
-                    } else {
-                        if ((month+1) < monthAnInt) {
+
+                        if ((month + 1) < monthAnInt) {
                             MyError myError = new MyError();
-                            myError.myDialog(CalendaActivity. this, "คุณเลือกย้อนเวลาไม่ได้","โปรดเลือกให้ถูกต้อง");
+                            myError.myDialog(CalendaActivity.this, "คุณเลือกย้อนเวลาไม่ได้", "โปรดเลือกให้ถูกต้อง");
 
 
                         } else {
@@ -116,18 +143,18 @@ public class CalendaActivity extends AppCompatActivity {
 
                                 if ((day <= DayAnInt)) {
                                     MyError myError = new MyError();
-                                    myError.myDialog(CalendaActivity.this, "คุณเลือกย้อนเวลาไม่ได้","โปรดเลือกให้ถูกต้อง");
+                                    myError.myDialog(CalendaActivity.this, "คุณเลือกย้อนเวลาไม่ได้", "โปรดเลือกให้ถูกต้อง");
 
                                 } else {
                                     DayAnInt = day;
-                                    monthAnInt = month +1;
+                                    monthAnInt = month + 1;
                                     yearAnInt = year;
                                 }
 
                             } else {
 
                                 DayAnInt = day;
-                                monthAnInt = month +1;
+                                monthAnInt = month + 1;
                                 yearAnInt = year;
 
                             }
@@ -135,20 +162,28 @@ public class CalendaActivity extends AppCompatActivity {
                         }
                     }
 
+                    DayAnInt = day;
+                    monthAnInt = month + 1;
+                    yearAnInt = year;
 
-                }    //onSelectDay
-            });
 
-        }   // calendar
+
+
+                }
+
+
+            }    //onSelectDay
+        });
+
+    }   // calendar
 
 
     private void SetupDate() {
-        Calendar calendar = Calendar.getInstance();
+            Calendar calendar = Calendar.getInstance();
 
-        DayAnInt = calendar.get(Calendar.DATE);
-        monthAnInt = calendar.get(Calendar.MONTH) + 1;
-        yearAnInt = calendar.get(calendar.YEAR);
-
+            DayAnInt = calendar.get(Calendar.DATE);
+            monthAnInt = calendar.get(Calendar.MONTH) + 1;
+            yearAnInt = calendar.get(calendar.YEAR);
 
 
     }
@@ -159,13 +194,13 @@ public class CalendaActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
-                    case  R.id.radioButton3:
+                    case R.id.radioButton3:
                         timeString = "0";
                         break;
-                    case  R.id.radioButton4:
+                    case R.id.radioButton4:
                         timeString = "1";
                         break;
-                    case  R.id.radioButton5:
+                    case R.id.radioButton5:
                         timeString = "2";
                         break;
 
@@ -174,7 +209,6 @@ public class CalendaActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
     private void getValue() {
@@ -219,11 +253,38 @@ public class CalendaActivity extends AppCompatActivity {
             MyError myError = new MyError();
             myError.myDialog(this, "คุณไม่ได้เลือกเวลา", "โปรดเลือกเวลาที่ต้องการ");
 
+        } else if (checkroom()) {
+            MyError myError = new MyError();
+            myError.myDialog(this, "ห้องไม่ว่างในวันดังกล่าว", "โปรดเลือกวันและเวลาอีกครั้ง");
+
         } else {
+
             updatetoserver();
         }
 
     }//click order
+
+    private boolean checkroom() {
+
+
+        try {
+            dateString = CreateDate(DayAnInt);
+            SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(MyOpenHelper.database_name,
+                    MODE_PRIVATE, null);
+            Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM orderTABLE WHERE NameRoom = "+"'"+ nameRoomString + "'"+" AND Date = " + "'" + dateString + "'", null);
+            cursor.moveToFirst();
+
+            Log.d("26MayV1", "Room ==>" + cursor.getString(2));
+            Log.d("26MayV1", "Date ==>" + cursor.getString(3));
+
+            return true;
+
+        } catch (Exception e) {
+            return false;
+        }
+
+
+    }
 
     private void updatetoserver() {
 
@@ -261,35 +322,35 @@ public class CalendaActivity extends AppCompatActivity {
     private void updateOrderTABLE() {
         String strURL = "http://swiftcodingthai.com/pbru/add_order.php";
         int intDay = DayAnInt;
-       for (int i=0; i<loopdayAnInt;i++) {
-           intDay = intDay + i;
-           OkHttpClient okHttpClient = new OkHttpClient();
-           RequestBody requestBody = new FormEncodingBuilder()
-                   .add("isAdd", "true")
-                   .add("IDcard", idcardString)
-                   .add("NameRoom", nameRoomString)
-                   .add("Date", CreateDate(intDay))
-                   .add("Time", timeString)
-                   .build();
+        for (int i = 0; i < loopdayAnInt; i++) {
+            intDay = intDay + i;
+            OkHttpClient okHttpClient = new OkHttpClient();
+            RequestBody requestBody = new FormEncodingBuilder()
+                    .add("isAdd", "true")
+                    .add("IDcard", idcardString)
+                    .add("NameRoom", nameRoomString)
+                    .add("Date", CreateDate(intDay))
+                    .add("Time", timeString)
+                    .build();
 
-           Request.Builder builder = new Request.Builder();
-           Request request = builder.url(strURL).post(requestBody).build();
-           Call call = okHttpClient.newCall(request);
-           call.enqueue(new Callback() {
-               @Override
-               public void onFailure(Request request, IOException e) {
+            Request.Builder builder = new Request.Builder();
+            Request request = builder.url(strURL).post(requestBody).build();
+            Call call = okHttpClient.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Request request, IOException e) {
 
-               }
+                }
 
-               @Override
-               public void onResponse(Response response) throws IOException {
-                   finish();
+                @Override
+                public void onResponse(Response response) throws IOException {
+                    finish();
 
-               }
-           });
+                }
+            });
 
 
-       }//for
+        }//for
     }//updateOrderTABLE
 
 
@@ -298,7 +359,6 @@ public class CalendaActivity extends AppCompatActivity {
         strResult = Integer.toString(intDay) + "/" +
                 Integer.toString(monthAnInt) + "/" +
                 Integer.toString(yearAnInt);
-
 
 
         return strResult;
@@ -334,5 +394,5 @@ public class CalendaActivity extends AppCompatActivity {
             return true;
         }
 
-}
+    }
 }//แม่
