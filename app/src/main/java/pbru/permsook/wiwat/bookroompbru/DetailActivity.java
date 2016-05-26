@@ -1,5 +1,6 @@
 package pbru.permsook.wiwat.bookroompbru;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,6 +31,7 @@ public class DetailActivity extends AppCompatActivity {
         showimage(1);
 
 
+
     }//ลูก
 
     public void clickBack(View view) {
@@ -37,6 +39,14 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void clickOrder(View view) {
+
+        Intent intent = new Intent(DetailActivity.this, CalendaActivity.class);
+        intent.putExtra("User", getIntent().getStringArrayExtra("User"));
+        intent.putExtra("NameRoom", nameRoomString);
+        startActivity(intent);
+
+
+
 
     }
 
@@ -60,6 +70,7 @@ public class DetailActivity extends AppCompatActivity {
         } else {
             myImage -= 1;
         }
+        showimage(myImage);
     }//เลื่อภาพไปทางซ้าย
 
     private void showimage(int intimage) {
@@ -84,7 +95,7 @@ public class DetailActivity extends AppCompatActivity {
                 break;
         }
         Picasso.with(this).load(urlImage).resize(250, 200).into(imageView);
-    }
+    }//showimge
 
     private void showtextviwe() {
         nameRoomTextView.setText(nameRoomString);

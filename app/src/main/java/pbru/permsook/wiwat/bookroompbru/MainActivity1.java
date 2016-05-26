@@ -48,6 +48,7 @@ public class MainActivity1 extends AppCompatActivity {
 
         //ทดสอบป้อนข้อมูล
        // mymanage.addUser("name","sur","card","off","user","pass");
+        mymanage.addorder("idcard", "NameRoom", "26/5/16", "1");
 
         //ลบทั้งหมดในฐานข้อมูลบนมือถือ SQllite
         deleteAllSQLite();
@@ -175,6 +176,7 @@ public class MainActivity1 extends AppCompatActivity {
         SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(MyOpenHelper.database_name,
                 MODE_PRIVATE, null);
         sqLiteDatabase.delete(Mymanage.user_table, null, null);
+        sqLiteDatabase.delete(Mymanage.order_table, null, null);
     }
 
     public void clickSingUpMain(View view) {

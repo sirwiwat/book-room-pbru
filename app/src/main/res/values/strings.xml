@@ -6,6 +6,10 @@
     <string name="idcard">รหัสบัตรประชาชน</string>
     <string name="office">บุคลากรภายใน</string>
     <string name="outoffice">บุคลากรภายนอก</string>
-
+    <string name="bedorenoon">8:00 - 12:00</string>
+    <string name="afternoon">13:00 - 16:00</string>
+    <string name="fullday">8:00 - 16:00</string>
+    <string name="text1">เลือกจำนวนวัน</string>
+    <string name="text2">เลือกเวลาที่ต้องการ</string>
 
 </resources>
